@@ -15,6 +15,7 @@ import {Colors} from '../Colors/colors';
 import Today from './Today';
 import Week from './Week';
 import Month from './Month';
+
 class AllTime extends Component {
   constructor(props) {
     super(props);
