@@ -8,7 +8,7 @@
  */
 
 import React from 'react';
-import {Component} from 'react';
+import { Component } from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -17,22 +17,89 @@ import {
   StatusBar,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
+import { Toast } from "../feed/feedComponents";
 
-import {Colors} from '../Colors/colors';
-import {nanoTaskData} from './nanoTaskData';
-import {FlatList} from 'react-native';
+
+import { Colors } from '../Colors/colors';
+import { nanoTaskData } from './nanoTaskData';
+import { FlatList } from 'react-native';
+import CustomActionSheet from '../camera/customActionSheet';
+import Camera from '../camera/camera';
+import * as loginApi from '../../api/loginApi';
 
 class NanoTaskDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       nanoTasks: nanoTaskData.tasksArray,
-      taskImages: nanoTaskData.taskImages,
+      taskImages: [],
       showMore: false,
-    };
-  }
+      nanoTask : this.props.route.params.nanoTask,
+      toastMessage: { visible: false, message: "" },
 
+    };
+    console.log(this.state.nanoTask.id,"tid")
+   // loginApi.getNanoTask(this.state.nanoTask.id).then(res=>{console.log(res,"resp")});
+    loginApi.getNanoTaskImages(this.state.nanoTask.title).then(res=>{console.log(res.data,"resp")
+    this.setState({taskImages:res.data.data})
+  
+  });
+    
+  }
+  componentDidMount() {
+    this.setState({});
+    setTimeout(() => {
+      this.forceUpdate();
+    }, 8000);
+  }
+imageActionSheetData = {
+    mainTitle: 'Select Image Source',
+    showCancel: true,
+    buttonsData: [
+      {
+        title: 'Shoot Photo',
+        action: () => {
+          Camera.loadCamera('photo', 'camera', (response) => {
+            console.log(response);
+           if (response.didCancel) {
+              this.setState({
+                toastMessage: { visible: true, message: "Image not selected" },
+              });
+            } else {
+              this.props.navigation.navigate("NanoTaskUpload", {
+                camData: response.assets,
+                nanoTask: this.state.nanoTask,
+      
+              });
+            }
+          });
+        },
+      },
+      {
+        title: 'Load Photo',
+        action: () => {
+          Camera.loadCamera('photo', 'library', (response) => {
+            console.log(response);
+             if (response.didCancel) {
+              this.setState({
+                toastMessage: { visible: true, message: "Image not selected" },
+              });
+            } else {
+              this.props.navigation.navigate("NanoTaskUpload", {
+                camData: response.assets,
+                nanoTask: this.state.nanoTask,
+      
+              });
+            }
+          });
+        },
+      },
+    ],
+  };
+
+  imageActionSheet = new CustomActionSheet(this.imageActionSheetData);
   ConvertTextToUpperCase = (A) => {
     var B = A.toUpperCase();
     return B;
@@ -45,7 +112,7 @@ class NanoTaskDetailsScreen extends Component {
           <TouchableOpacity delayPressIn={50}>
             <Image
               style={[styles.gridImage]}
-              source={{uri: item.contentThumbUrl}}
+              source={{ uri: item.contentThumbUrl }}
             />
           </TouchableOpacity>
         </View>
@@ -58,7 +125,7 @@ class NanoTaskDetailsScreen extends Component {
 
   render() {
     const nanoTask = this.props.route.params.nanoTask;
-    console.log(this.state.taskImages, 'nano');
+//    console.log(this.state.taskImages, 'nano');
     const TruncateText = (props) => {
       var txt = props.text;
       var limit = props.limit;
@@ -82,7 +149,9 @@ class NanoTaskDetailsScreen extends Component {
           return (
             <Text>
               <Text>{txt} </Text>
+              
               <ShowMoreComponent />
+              
             </Text>
           );
         }
@@ -101,26 +170,38 @@ class NanoTaskDetailsScreen extends Component {
     };
     return (
       <View style={styles.container}>
-        <ScrollView>
+        <Toast
+          visible={this.state.toastMessage.visible}
+          message={this.state.toastMessage.message}
+        />
+        <ScrollView style={{height:"100%"}}>
           <View style={styles.body}>
             <StatusBar barStyle="light-content" />
             <View style={[styles.topContainer]}>
-              <Image source={{uri: nanoTask.imgURL}} style={styles.topImage} />
+              <Image
+                source={{ uri: nanoTask.imgURL }}
+                style={styles.topImage}
+              />
             </View>
             <View>
               <Text
                 style={[
                   {
                     color: Colors.grey,
-                    textAlign: 'center',
+                    textAlign: 'left',
                     fontSize: 31,
-                    marginVertical: 10,
+                    marginLeft: 20,
                     fontFamily: 'FiraSans-Bold',
-                    fontWeight: 'bold',
+                    height:40,
+
+
+
                   },
-                ]}>
-                {this.ConvertTextToUpperCase('#' + nanoTask.title)}
+                ]}
+              >
+                {'#' + nanoTask.title}
               </Text>
+              {nanoTask.carbonMultiplier && <Text style={[{marginHorizontal:20, color:Colors.primary,  fontFamily: 'FiraSans-Bold',marginBottom:2}]}>{nanoTask.carbonMultiplier}{console.log(nanoTask,"carbo")} gram(s) CO<Text>2</Text>e<Text>/task</Text></Text>}
               <TouchableOpacity
                 style={styles.redBorderButton}
                 onPress={() =>
@@ -129,97 +210,110 @@ class NanoTaskDetailsScreen extends Component {
                     ? this.props.navigation.navigate('RouteScreen', {
                         nanoTask: nanoTask,
                       })
-                    : this.props.navigation.navigate('NanoTaskUpload', {
-                        nanoTask: nanoTask,
-                      })
-                }>
+                    : this.imageActionSheet.show()
+                }
+              >
                 <Text
                   style={[
                     {
-                      fontSize: 18,
+                      fontSize: 16,
                       color: Colors.primary,
                       textAlign: 'center',
                       textAlignVertical: 'bottom',
+                       fontFamily: 'FiraSans-Bold',
                     },
-                  ]}>
-                  Upload
+                  ]}
+                >
+                  {nanoTask.title == 'Commute' ? 'Start' : 'Upload'}
                 </Text>
               </TouchableOpacity>
-
+<View>
               <Text
                 style={[
                   {
-                    color: Colors.grey,
-                    textAlign: 'justify',
-                    fontSize: 20,
-                    margin: 10,
+                    color: Colors.midGrey,
+                    textAlign: 'left',
+                    fontSize: 16,
+                    margin: 20,
+                    marginTop:5,
                     fontFamily: 'FiraSans-Regular',
                   },
-                ]}>
+                ]}
+              >
                 <TruncateText
                   text={nanoTask.details}
-                  limit={100}
+                  limit={200}
                   showMore={this.state.showMore}
                   showMoreComponent={
-                    <TouchableOpacity
-                      style={{height: 16}}
+                    <Text
+                      style={{ height: 16 }}
                       onPress={() => {
-                        this.setState({showMore: true});
+                        this.setState({ showMore: true });
                         console.log(this.state.showMore);
-                      }}>
+                      }}
+                    >
                       <Text
                         style={[
                           {
-                            fontSize: 18,
+                            fontSize: 16,
                             color: Colors.primary,
                             textAlign: 'center',
+                            fontFamily: 'FiraSans-Regular',
                           },
-                        ]}>
+                        ]}
+                      >
                         show more
                       </Text>
-                    </TouchableOpacity>
+                    </Text>
                   }
                   showLessComponent={
-                    <TouchableOpacity
-                      style={[{height: 16}]}
+                    <Text
+                      style={[{ height: 16 }]}
                       onPress={() => {
-                        this.setState({showMore: false});
-                      }}>
+                        this.setState({ showMore: false });
+                      }}
+                    >
                       <Text
                         style={[
                           {
-                            fontSize: 18,
+                           fontSize: 16,
                             color: Colors.primary,
                             textAlign: 'center',
+                            fontFamily: 'FiraSans-Regular',
                           },
-                        ]}>
+                        ]}
+                      >
                         show less
                       </Text>
-                    </TouchableOpacity>
+                    </Text>
                   }
                 />
               </Text>
+              </View>
             </View>
             <View
               style={{
                 flex: 1,
-              }}>
+
+              }}
+            >
               {/* <View>{this.renderNanoTasks(this.state.taskImages)}</View> */}
               {/* {this.nanoListArray} */}
 
-              <FlatList
+              {<FlatList
                 data={this.state.taskImages}
-                renderItem={({item}) => (
+                renderItem={({ item }) => (
                   <View
                     style={{
                       flex: 1,
                       flexDirection: 'column',
                       margin: 4,
-                    }}>
+                    }}
+                  >
                     <TouchableOpacity delayPressIn={50}>
                       <Image
-                        style={[{height: 150}]}
-                        source={{uri: item.contentThumbUrl}}
+                        style={[{ height: 120, borderRadius:12}]}
+                        source={{ uri: item.contentThumbUrl }}
                       />
                     </TouchableOpacity>
                   </View>
@@ -227,11 +321,15 @@ class NanoTaskDetailsScreen extends Component {
                 //Setting the number of column
                 numColumns={3}
                 keyExtractor={(item, index) => index.toString()}
-              />
+                scrollEnabled={false}
+              />}
             </View>
+            <View style={{height:60}}></View>
           </View>
         </ScrollView>
+         {this.imageActionSheet.ActionSheetNode()}
       </View>
+      
     );
   }
 }
@@ -280,7 +378,10 @@ const styles = StyleSheet.create({
     margin: 4,
   },
   body: {
-    flex: 1,
+ 
+
+    height:"100%"
+
   },
 
   topImage: {
@@ -298,6 +399,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     height: 200,
     minHeight: 250,
+    
   },
   taskBox: {
     alignContent: 'center',
@@ -320,12 +422,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     alignContent: 'center',
     justifyContent: 'center',
-    width: 70,
+    width: '90%',
     color: Colors.primary,
     borderColor: Colors.primary,
     alignSelf: 'center',
-    borderRadius: 5,
+    borderRadius: 8,
     borderWidth: 2,
+
   },
 });
 

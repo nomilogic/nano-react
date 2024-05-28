@@ -1121,11 +1121,17 @@ const Community = (props) => {
                     <View style={{flex:1, flexDirection:"column", marginTop:20,paddingBottom:20}}>
                         {community.map((item, index)=>(
                             <View style={{marginBottom:10,marginTop:10,flex:1,flexDirection:"row"}} key={index}>
-                                <View style={{flex:0.2,alignItems: "center",}}>
+                                <View style={{flex:0.2,alignItems: "center",}} >
+                                    <TouchableOpacity
+                                    onPress={() => {
+                                        props.navigation.navigate('CommunityFeed');
+                                        }}
+                                    >
                                     <Image
                                         source={{uri: item.imgUrl}}
                                         style={[styles.userImage,{top:-5}]}
-                                    />
+                                        
+                                    /></TouchableOpacity>
                                 </View>
                                 <View style={{flex:0.8}}>
                                     <View style={{flex:1,flexDirection:"row"}}>
@@ -1137,6 +1143,7 @@ const Community = (props) => {
                                                 <TouchableOpacity
                                                     style={{}}
                                                     //onPress={this.onPress}
+                                                    
                                                 >
                                                     <Ionicons 
                                                         name="people"

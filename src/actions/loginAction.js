@@ -1,6 +1,6 @@
 import * as loginApi from '../api/loginApi';
 import * as Types from '../actions/actionTypes';
-import uuid from 'react-native-uuid';
+//import uuid from 'react-native-uuid';
 export function loginSuccess(data) {
   return {type: Types.USER_LOGIN, data};
 }
@@ -14,6 +14,18 @@ export function login(obj) {
       // console.log('result from::', result.data);
       if (result.status == 200) {
         return dispatch(loginSuccess(result.data));
+      }
+    });
+  };
+}
+export function getNanoTaskList(obj) {
+  return (dispatch) => {
+    return loginApi.getNanoTaskList(obj).then((result) => {
+     // console.log('result from::', result.data);
+      if (result.status == 200) {
+         return dispatch(
+           { type: Types.GET_NANO_TASK_LIST, ...result.data }
+         );
       }
     });
   };

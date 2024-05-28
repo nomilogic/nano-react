@@ -107,7 +107,7 @@ export function DrawerContent(props) {
                   )}
                   label="Rewards"
                   onPress={() => {
-                    props.navigation.navigate('Setting');
+                    props.navigation.navigate('Reward');
                   }}
                 />
                 <DrawerItem
@@ -157,7 +157,7 @@ export function DrawerContent(props) {
                   )}
                   label="Community"
                   onPress={() => {
-                    props.navigation.navigate('Home');
+                    props.navigation.navigate('Community');
                   }}
                 />
                 <DrawerItem
@@ -207,7 +207,7 @@ export function DrawerContent(props) {
                   )}
                   label="Feedback"
                   onPress={() => {
-                    props.navigation.navigate('Home');
+                    props.navigation.navigate('Feed');
                   }}
                 />
                 <DrawerItem
@@ -232,7 +232,7 @@ export function DrawerContent(props) {
                   )}
                   label="Profile"
                   onPress={() => {
-                    props.navigation.navigate('Home');
+                    props.navigation.navigate('Profile  ');
                   }}
                 />
                 <DrawerItem

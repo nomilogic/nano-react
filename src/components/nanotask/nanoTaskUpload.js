@@ -1,40 +1,102 @@
+/* eslint-disable react-native/no-inline-styles */
+import AsyncStorage from '@react-native-community/async-storage';
 import React from 'react';
-import {Component} from 'react';
+import { Component } from 'react';
 import {
   StyleSheet,
-  ScrollView,
   View,
   Text,
   StatusBar,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
+  Dimensions,
+  Modal,
+  Alert,
 } from 'react-native';
 
-import {Colors} from '../Colors/colors';
-import {nanoTaskData} from './nanoTaskData';
+import { Colors } from '../Colors/colors';
+import { nanoTaskData } from './nanoTaskData';
+import * as nanoTaskApi from '../../api/nanoTaskApi';
+import { ActivityLoader } from '../feed/feedComponents';
+import { Toast } from "../feed/feedComponents";
+
 
 class NanoTaskUpload extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      nanoTasks: nanoTaskData.tasksArray,
-      taskImages: nanoTaskData.taskImages,
-    };
-  }
+    //  nanoTasks: nanoTaskData.tasksArray,
+    //  taskImages: nanoTaskData.taskImages,
+      userData: this.GetUserData(),
+      imageData: this.props.route.params.camData[0],
+      nanoTask:this.props.route.params.nanoTask,
+      showLoader:false,
+      toastMessage: { visible: false, message: "" },
 
-  ConvertTextToUpperCase = A => {
+    };
+    this.GetUserData();
+  }
+  GetUserData = async () => {
+    let udata = await AsyncStorage.getItem('userData');
+
+    // Alert.alert('Success!', 'Username Correct.', [{text: 'Okay'}]);
+    this.setState({ userData: JSON.parse(udata) });
+    return udata;
+  };
+
+  ConvertTextToUpperCase = (A) => {
     var B = A.toUpperCase();
     return B;
   };
+  async uploadNanoTask() {
+    this.setState({showLoader:true})
+    let udata = await this.GetUserData();
+    let Uuid = await AsyncStorage.getItem('Uuid');
+    console.log(udata,'uuid');
 
-  renderNanoTasks = taskArray => {
+    let obj = {
+      userId: this.state.userData.id,
+      nanoTaskId: this.state.nanoTask.id,
+      type: 'image',
+      uuid:udata.uuid,
+      contentdata: this.state.imageData.base64,
+    };
+
+    nanoTaskApi.uploadNanoImage(obj).then((resp) => {
+      let thumbUrl = resp.data.data.thumbURL;
+      
+      console.log(resp.data, 'upload Nano Image Response');
+          let objAdd = {
+            nanoTaskId: this.state.nanoTask.id,
+            userId: this.state.userData.id,
+            contentUrl:thumbUrl,
+            contentThumbUrl:thumbUrl,
+            contentType:'image',
+            type:this.state.nanoTask.title,
+            location:'no location found',
+            lat:0,
+            lng:0,
+          };
+          nanoTaskApi.addActivity(objAdd).then((actResp) => {
+        this.props.navigation.navigate('NanoTaskUploadConfirm', {
+        nanoTask: this.state.nanoTask,
+      });
+        console.log(actResp,'activity Response');
+        this.setState({showLoader:false})
+          });
+
+    }).catch(e=>console.log(e));
+  }
+ 
+  renderNanoTasks = (taskArray) => {
     var nanoListArray = taskArray.map((item, index) => {
       var TaskNode = (
         <View key={index}>
           <TouchableOpacity delayPressIn={50}>
             <Image
               style={[styles.gridImage]}
-              source={{uri: item.contentThumbUrl}}
+              source={{ uri: item.contentThumbUrl }}
             />
           </TouchableOpacity>
         </View>
@@ -46,7 +108,8 @@ class NanoTaskUpload extends Component {
   };
   render() {
     const nanoTask = this.props.route.params.nanoTask;
-    console.log(this.state.taskImages, 'nano');
+    //  console.log(this.state.taskImages, 'nano');
+    console.log(Object.keys(this.state.imageData, 'keys'));
 
     return (
       <View style={styles.container}>
@@ -57,15 +120,20 @@ class NanoTaskUpload extends Component {
               {
                 flex: 1,
               },
-            ]}>
-            <Image source={{uri: nanoTask.imgURL}} style={styles.topImage} />
+            ]}
+          >
+            <Image
+              source={{ uri: this.state.imageData.uri }}
+              style={styles.topImage}
+            />
           </View>
           <View
             style={[
               {
                 flex: 1,
               },
-            ]}>
+            ]}
+          >
             <Text
               style={[
                 {
@@ -76,26 +144,28 @@ class NanoTaskUpload extends Component {
                   fontFamily: 'FiraSans-Bold',
                   fontWeight: 'bold',
                 },
-              ]}>
+              ]}
+            >
               {'Show us the\n' +
                 this.ConvertTextToUpperCase(nanoTask.title) +
                 '!'}
             </Text>
             <TouchableOpacity
-              style={styles.redButton}
+              style={[styles.redButton,{ width:"90%",}]}
               onPress={() =>
-                this.props.navigation.navigate('NanoTaskUploadConfirm', {
-                  nanoTask: nanoTask,
-                })
-              }>
+              { this.uploadNanoTask();}
+              }
+            >
               <Text
                 style={[
                   {
                     fontSize: 18,
                     color: Colors.white,
                     textAlign: 'center',
+                   
                   },
-                ]}>
+                ]}
+              >
                 Submit your photo
               </Text>
             </TouchableOpacity>
@@ -109,7 +179,8 @@ class NanoTaskUpload extends Component {
                   margin: 10,
                   fontFamily: 'FiraSans-Regular',
                 },
-              ]}>
+              ]}
+            >
               Submit it for approval from nano users just like you to complete
               this week's nano task.
             </Text>
@@ -118,6 +189,8 @@ class NanoTaskUpload extends Component {
           {/* <View>{this.renderNanoTasks(this.state.taskImages)}</View> */}
           {/* {this.nanoListArray} */}
         </View>
+      <ActivityLoader showLoader={this.state.showLoader} text="Please Wait..." />
+        
       </View>
     );
   }
