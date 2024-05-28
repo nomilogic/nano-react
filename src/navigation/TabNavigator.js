@@ -37,17 +37,18 @@ const BottomTabNavigator = () => {
           // You can return any component that you like here!
           return <Ionicons name={iconName} size={size} color={color} />;
         },
+        headerShown:false,
       })}
       tabBarOptions={{
         activeTintColor: 'tomato',
         inactiveTintColor: 'gray',
       }}>
-      <Tab.Screen name="News" component={RootStackScreen} />
-      <Tab.Screen name="Championship" component={ChampionStackScreen} />
-      <Tab.Screen name="Task" component={TaskStackScreen} />
+      <Tab.Screen name="News" component={RootStackScreen} options={{ headerShown: false}} />
+      <Tab.Screen name="Championship" component={ChampionStackScreen} options={{ headerShown: false}}  />
+      <Tab.Screen name="Task" component={TaskStackScreen} options={{ headerShown: false}} />
       {/*<Tab.Screen name="Task" component={MainStackNavigator} />*/}
       {/*<Tab.Screen name="Versus" component={VersusStackNavigator} />*/}
-      <Tab.Screen name="Impact" component={ImpactStackScreen} />
+      <Tab.Screen name="Impact" component={ImpactStackScreen}  options={{ headerShown: false}} />
     </Tab.Navigator>
   );
 };

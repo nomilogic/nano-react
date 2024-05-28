@@ -149,7 +149,9 @@ const RewardStackScreen = ({navigation}) => {
 const LoginStack = createStackNavigator();
 const LoginStackScreen = ({navigation}) => {
   return (
-    <LoginStack.Navigator headerMode="none">
+    <LoginStack.Navigator  screenOptions={{
+      headerShown: false
+    }}>
       <LoginStack.Screen name="SignInScreen" component={SignInScreen} />
       <LoginStack.Screen name="SignUpScreen" component={SingUpScreen} />
       <LoginStack.Screen name="Onboard" component={OnboardingScreen} />

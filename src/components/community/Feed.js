@@ -834,10 +834,9 @@ class Feed extends Component{
                                                     data={postData}
                                                     renderItem={this._renderListItem}
                                                     keyExtractor={(item, index) => item + index}
-                                                    style={{flex: 1, backgroundColor: Colors.white}}
+                                                    style={{flex: 1, backgroundColor: Colors.white, marginTop:20}}
                                                     showsVerticalScrollIndicator={false}
                                                     alwaysBounceVertical
-                                                    style={{marginTop:20}}
                                                 />
                                             </View>
                                         )}

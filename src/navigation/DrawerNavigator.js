@@ -21,9 +21,9 @@ console.log(Drawer);
 const DrawerNavigator = ({Navigator}) => {
   console.log('out:', Navigator);
   return (
-    <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}>
+    <Drawer.Navigator drawerContent={(props) => <DrawerContent {...props} />}   screenOptions={{ headerShown: false }}>
       <Drawer.Screen name="Home" component={BottomTabNavigator} />
-      <Drawer.Screen
+      <Drawer.Screen 
         name="Setting"
         component={Settings}
       options={({ navigation }) => ({

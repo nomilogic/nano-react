@@ -15,10 +15,11 @@ import {
 import { Colors } from "../Colors/colors";
 import { FlatList } from "react-native";
 
-import VideoPlayer from "react-native-video-player";
-import { Icon } from "../Icons/icons";
-import AutoHeightImage from "react-native-auto-height-image";
 
+//import VideoPlayer from 'react-native-video-player';
+import {Icon} from '../Icons/icons';
+import AutoHeightImage from 'react-native-auto-height-image';
+import Video from 'react-native-video';
 // import AutoHeightImage from 'react-native-auto-height-image';
 const PostImage = ({ item }) => (
   <View>
@@ -40,13 +41,13 @@ const Img = function (props) {
 };
 const PostVideo = ({ item }) => (
   <View style={[styles.postContainer]}>
-    {/* <Video
+    <Video
         source={{uri: item.mediaUrl}}
         style={styles.PostVideo}
         controls={true}
         playWhenInactive={false}
         resizeMode={'contain'}
-      /> */}
+      />
     {
       <VideoPlayer
         style={[styles.PostImageContainer]}
