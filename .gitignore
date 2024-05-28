@@ -32,15 +32,15 @@ local.properties
 # node.js
 #
 node_modules/
-# android/
-# ios/
+android/
+ios/
 npm-debug.log
 yarn-error.log
 
 # BUCK
 buck-out/
 \.buckd/
-# -- *.keystore
+*.keystore
 !debug.keystore
 
 # fastlane
