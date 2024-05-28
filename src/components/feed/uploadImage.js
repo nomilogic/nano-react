@@ -41,7 +41,9 @@ class UploadImageScreen extends Component {
         usertags: [],
         total: 0,
       },
+      imageData:this.props.route.params.camData[0],
     };
+    console.log(this.props.route.params,'props');
   }
 
   render() {
@@ -82,7 +84,8 @@ class UploadImageScreen extends Component {
           </TouchableOpacity>
         </View>
         <View style={[{backgroundColor: Colors.grey}]}>
-          <PostImage item={this.state.imageObject} />
+          {console.log(this.state.imageData,"unfine")}
+          <PostImage item={{thumbUrl:this.state.imageData.uri}} />
         </View>
 
         <View style={{height: 80}}>
@@ -159,7 +162,7 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'cover',
   },
-  PostImage: {width: '100%', height: '100%'},
+
   smallText: {
     alignSelf: 'center',
     paddingBottom: 10,

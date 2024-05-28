@@ -5,9 +5,13 @@ import {StyleSheet, View, Text, Image, TouchableOpacity} from 'react-native';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+var nprops;
 class RewardsAndOffers extends Component {
+
   constructor(props) {
     super(props);
+   console.log(this.props)
+
   }
   state = {
     activeIndex: 0,
@@ -30,10 +34,15 @@ class RewardsAndOffers extends Component {
       },
     ],
   };
-  _renderItem({item, index}) {
+  _renderItem({item, index,props}) {
+  
     return (
       <View style={styles.sliderBox}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() =>
+              this.props.navigation.navigate('RewardDetails', {
+                nanoTask: item,
+              })
+            }>
             
           <View style={{flex: 1, flexDirection: 'row', height: 200}}>
           <Image
@@ -51,6 +60,7 @@ class RewardsAndOffers extends Component {
   render() {
     // connect styles to props.style defined by the theme
     //const styles = this.props.style;
+     
     return (
       <>
         <View style={[styles.sliderGlobal, {flex: 1}]}>
@@ -68,7 +78,7 @@ class RewardsAndOffers extends Component {
               data={this.state.carouselItems}
               sliderWidth={380}
               itemWidth={380}
-              renderItem={this._renderItem}
+              renderItem={this._renderItem.bind(this)}
               onSnapToItem={(index) => this.setState({activeIndex: index})}
             />
             <Pagination

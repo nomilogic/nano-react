@@ -25,7 +25,9 @@ class UploadVideoScreen extends Component {
         thumbUrl:
           'https://media.nanodot.us/thumbnails/nano/local/useruploads/users/nanotask/Video/20200201_014102.jpg',
       },
-    };
+      videoData:this.props.route.params.camData[0],
+    }
+    console.log(this.state.videoData.uri)
   }
 
   render() {
@@ -66,9 +68,9 @@ class UploadVideoScreen extends Component {
           </TouchableOpacity>
         </View>
         <View style={[{backgroundColor: Colors.grey}]}>
-          <PostVideo item={this.state.videoObject} />
+          {console.log(this.state.videoData.uri)}
+          <PostVideo  item={{mediaUrl:this.state.videoData.uri,thumbUrl:this.state.videoData.uri}} />
         </View>
-
         <View style={{height: 80}}>
           <View
             style={[

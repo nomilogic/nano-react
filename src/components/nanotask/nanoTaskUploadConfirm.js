@@ -13,14 +13,21 @@ import {
 import {Colors} from '../Colors/colors';
 import {nanoTaskData} from './nanoTaskData';
 import {FlatList} from 'react-native';
+import * as nanoTaskApi from '../../api/nanoTaskApi';
 
 class NanoTaskUploadConfirm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       nanoTasks: nanoTaskData.tasksArray,
-      taskImages: nanoTaskData.taskImages,
+      nanoTask: this.props.route.params.nanoTask,
+      Images: [],
+      taskImages:[],
     };
+     nanoTaskApi.getNanoTaskImages(this.state.nanoTask.title).then(res=>{console.log(res.data,"resp")
+    this.setState({taskImages:res.data.data})
+  
+  });
   }
 
   ConvertTextToUpperCase = (A) => {
@@ -46,7 +53,8 @@ class NanoTaskUploadConfirm extends Component {
     return nanoListArray;
   };
   render() {
-    const nanoTask = this.props.route.params.nanoTask;
+    //const nanoTask = this.props.route.params.nanoTask;
+    const nanoTask = this.state.nanoTask;
     console.log(this.state.taskImages, 'nano');
 
     return (
@@ -117,7 +125,7 @@ class NanoTaskUploadConfirm extends Component {
                     }}>
                     <TouchableOpacity delayPressIn={50}>
                       <Image
-                        style={[{height: 150}]}
+                        style={[{height: 120, borderRadius:12}]}
                         source={{uri: item.contentThumbUrl}}
                       />
                     </TouchableOpacity>

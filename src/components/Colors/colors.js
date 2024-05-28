@@ -10,4 +10,6 @@ export const Colors = {
   blackBlue: '#203541',
   yellow: '#cfd955',
   blue: 'blue',
+  fieldGrey: '#e1e1e1',
+  darkGrey: '#989898',
 };

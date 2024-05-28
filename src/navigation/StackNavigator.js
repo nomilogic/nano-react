@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {View, Text, Image, Linking, Button} from 'react-native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {View, Text, Image, Linking, Button, TouchableOpacity, Platform, Dimensions} from 'react-native';
+import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
 import HomeScreen from '../components/HomeScreen';
 import DetailsScreen from '../components/DetailsScreen';
 import SettingsScreen from '../components/SettingsScreen';
@@ -32,9 +32,17 @@ import UploadImageScreen from '../components/feed/uploadImage';
 import UploadTextScreen from '../components/feed/uploadText';
 import UploadLinkScreen from '../components/feed/uploadLink';
 import CarbonCalculator from '../components/carbonCalclulator/carbonCalculator';
+import Reward from '../components/reward/Reward';
+import RewardDetails from '../components/reward/RewardDetails';
+import RewardList from '../components/reward/RewardList';
+import RewardAnalytics from '../components/reward/RewardAnalytics';
+import Community from '../components/search/Community';
+import Feed from '../components/community/Feed';
+import Camera from '../components/camera/camera';
 // import SplashScreen from 'react-native-splash-screen';
 const RootStack = createStackNavigator();
 const RootStackScreen = ({navigation}) => {
+  console.log(navigation, 'naviRootStack');
   return (
     <RootStack.Navigator>
       <RootStack.Screen
@@ -76,6 +84,67 @@ const SettingStackScreen = ({navigation}) => {
     </SettingStack.Navigator>
   );
 };
+const RewardStack = createStackNavigator();
+const RewardStackScreen = ({navigation}) => {
+  return (
+    <RewardStack.Navigator>
+      <RewardStack.Screen name="Reward" component={Reward}  
+      options={({ navigation }) => ({
+          headerShown: true,
+          title: 'Rewards',
+          headerLeft: () => (
+            <HeaderBackButton
+              onPress={() => {
+                navigation.goBack()
+                console.log('In');
+                console.log();
+              }}
+            />
+          )
+        })}
+        
+        
+        />
+      <RewardStack.Screen name="RewardDetails" component={RewardDetails} 
+       options={({ navigation }) => ({
+          headerShown: true,
+          title: 'Rewards',
+          headerLeft: () => (
+            <HeaderBackButton
+              onPress={() => {
+                navigation.goBack()
+                console.log('In');
+                console.log();
+              }}
+            />
+          ),
+          headerRight: () => (
+
+            <TouchableOpacity onPress={() =>{
+              console.log(this)
+              this.props.navigation.navigate('RewardAnalytics')
+
+            }}
+            style={{right: 10, backgroundColor: 'blue', padding:10}}>
+              <Icon
+              url="https://media.nanodot.us/icon/searchIcon.svg"
+              height={20}
+              width={20}
+              color="#fff"
+            />
+            </TouchableOpacity>
+
+
+          )
+        })}/>
+      <RewardStack.Screen name="RewardList" component={RewardList} />
+      <RewardStack.Screen name="RewardAnalytics" component={RewardAnalytics} />
+
+      {/*<SettingStack.Screen name="Setting" component={Settings} />*/}
+    </RewardStack.Navigator>
+  );
+};
+
 
 const LoginStack = createStackNavigator();
 const LoginStackScreen = ({navigation}) => {
@@ -135,6 +204,7 @@ const TaskStackScreen = ({navigation}) => {
       <TaskStack.Screen
         name="NanoTaskUploadConfirm"
         component={NanoTaskUploadConfirm}
+        options={ {headerShown: false}}
       />
     </TaskStack.Navigator>
   );
@@ -176,7 +246,7 @@ const ImpactStackScreen = ({navigation}) => {
   return (
     <ImpactStack.Navigator>
       <ImpactStack.Screen
-        name="Championship"
+        name="Impact"
         component={MyImpactScreen}
         options={{
           title: 'My Impact',
@@ -195,12 +265,74 @@ const ImpactStackScreen = ({navigation}) => {
           ),
         }}
       />
-      <ImpactStack.Screen name="Profile" component={Profile} />
+   
       <ImpactStack.Screen
         name="CarbonCalculator"
         component={CarbonCalculator}
       />
     </ImpactStack.Navigator>
+  );
+};
+const ProfileStack = createStackNavigator();
+const ProfileStackScreen = ({navigation}) => {
+  return (
+    <ProfileStack.Navigator>
+      <ProfileStack.Screen
+        name="Profile"
+        component={Profile}
+     options={({ navigation }) => ({
+          headerShown: true,
+          title: 'Profile',
+          headerLeft: () => (
+            <HeaderBackButton
+              onPress={() => {
+                navigation.goBack();
+              }}
+            />
+          ),
+          
+        })}
+        title="Profile"
+      />
+   
+      <ProfileStack.Screen
+        name="CarbonCalculator"
+        component={CarbonCalculator}
+      />
+    </ProfileStack.Navigator>
+  );
+};
+const CommunityStackStack = createStackNavigator();
+const CommunityStackStackScreen = ({navigation}) => {
+  return (
+    <CommunityStackStack.Navigator>
+      <CommunityStackStack.Screen
+        name="Community"
+        component={Community}
+       options={({ navigation }) => ({
+          headerShown: true,
+          title: 'Community',
+          headerLeft: () => (
+            <HeaderBackButton
+              onPress={() => {
+                navigation.goBack();
+              }}
+            />
+          ),
+          
+        })}
+      />
+   
+      <CommunityStackStack.Screen
+        name="CommunityFeed"
+        component={Feed}
+      />
+         <RootStack.Screen name="UploadVideo" component={UploadVideoScreen} />
+      <RootStack.Screen name="UploadImage" component={UploadImageScreen} />
+      <RootStack.Screen name="UploadLink" component={UploadLinkScreen} />
+      <RootStack.Screen name="UploadText" component={UploadTextScreen} />
+      <RootStack.Screen name="Comments" component={CommentsScreen} />
+    </CommunityStackStack.Navigator>
   );
 };
 
@@ -211,4 +343,7 @@ export {
   TaskStackScreen,
   ChampionStackScreen,
   ImpactStackScreen,
+  RewardStackScreen,
+  ProfileStackScreen,
+  CommunityStackStackScreen,
 };
