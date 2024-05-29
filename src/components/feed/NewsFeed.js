@@ -34,7 +34,7 @@ import ActionSheet from "react-native-actions-sheet";
 import { Avatar } from "react-native-paper";
 // import {VLCPlayer, VlCPlayerView} from 'react-native-vlc-media-player';
 
-import VideoPlayer from "react-native-video-player";
+//import VideoPlayer from "react-native-video-player";
 import { SvgCssUri } from "react-native-svg";
 import { Icon } from "../Icons/icons";
 import SegmentedControlTab from "react-native-segmented-control-tab";

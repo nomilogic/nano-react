@@ -49,11 +49,11 @@ const PostVideo = ({ item }) => (
         resizeMode={'contain'}
       />
     {
-      <VideoPlayer
+      {/* <VideoPlayer
         style={[styles.PostImageContainer]}
         video={{ uri: item.mediaUrl }}
         thumbnail={{ uri: item.thumbUrl }}
-      />
+      /> */}
     }
   </View>
 );
