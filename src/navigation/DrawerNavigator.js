@@ -9,9 +9,10 @@ import Settings from '../components/settings/Settings';
 import Blocked from '../components/settings/Blocked';
 import Account from '../components/settings/Account';
 import Feedback from '../components/feedback/Feedback';
-import {HeaderBackButton} from '@react-navigation/stack';
+import {HeaderBackButton} from '@react-navigation/elements';
 import { CommunityStackStackScreen, ProfileStackScreen, RewardStackScreen } from './StackNavigator';
-
+import { View } from 'react-native-reanimated/lib/typescript/Animated';
+import { Button } from 'react-native-paper';
 
 // import {DrawerContent} from './DrawerContent';
 const Drawer = createDrawerNavigator();
@@ -30,13 +31,13 @@ const DrawerNavigator = ({Navigator}) => {
           headerShown: true,
           title: 'Settings',
           headerLeft: () => (
-            <HeaderBackButton
-              onPress={() => {
-                navigation.goBack()
-                console.log('In');
-                console.log();
-              }}
-            />
+           /*  <HeaderBackButton
+              onPress={() => navigation.goBack()}
+              title="Back" // You can set a custom title here
+              tintColor="#fff" // Custom color for the back button
+            /> */
+           // <View>Back</View>
+           <HeaderBackButton onPress={()=>navigation.goBack()} >{'<'}</HeaderBackButton>
           ),
         })}
       />

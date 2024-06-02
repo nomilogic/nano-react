@@ -48,13 +48,7 @@ const PostVideo = ({ item }) => (
         playWhenInactive={false}
         resizeMode={'contain'}
       />
-    {
-      {/* <VideoPlayer
-        style={[styles.PostImageContainer]}
-        video={{ uri: item.mediaUrl }}
-        thumbnail={{ uri: item.thumbUrl }}
-      /> */}
-    }
+    
   </View>
 );
 const postLiveYoutube = ({ item }) => (

@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {View, Text, Image, Linking, Button, TouchableOpacity, Platform, Dimensions} from 'react-native';
-import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
+import {createStackNavigator} from '@react-navigation/stack';
+import {HeaderBackButton} from '@react-navigation/elements';
 import HomeScreen from '../components/HomeScreen';
 import DetailsScreen from '../components/DetailsScreen';
 import SettingsScreen from '../components/SettingsScreen';
@@ -294,7 +295,6 @@ const ProfileStackScreen = ({navigation}) => {
           ),
           
         })}
-        title="Profile"
       />
    
       <ProfileStack.Screen

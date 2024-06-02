@@ -134,8 +134,9 @@ class NewsFeed extends Component {
             item.mediaUrl.length,
           ) === ".mp4")
       ) {
-        console.log(item.type, item);
-        return PostVideo({ item });
+        console.log(item.type, item, PostVideo({ item }));
+
+        return  PostVideo({ item });
       } else if (item.type === "link") {
         return PostLink({ item });
       } else if (item.type === "image") {

@@ -8,7 +8,7 @@ import {
   SettingStackScreen,
   TaskStackScreen,
   ChampionStackScreen,
-    ImpactStackScreen
+  ImpactStackScreen,
 } from './StackNavigator';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 const Tab = createBottomTabNavigator();
@@ -20,6 +20,14 @@ const BottomTabNavigator = () => {
       shifting={true}
       backBehavior={'none'}
       screenOptions={({route}) => ({
+        tabBarActiveTintColor: 'tomato',
+        tabBarInactiveTintColor: 'gray',
+        tabBarStyle: [
+          {
+            display: 'flex',
+          },
+          null,
+        ],
         tabBarIcon: ({focused, color, size}) => {
           let iconName;
 
@@ -37,18 +45,30 @@ const BottomTabNavigator = () => {
           // You can return any component that you like here!
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        headerShown:false,
-      })}
-      tabBarOptions={{
-        activeTintColor: 'tomato',
-        inactiveTintColor: 'gray',
-      }}>
-      <Tab.Screen name="News" component={RootStackScreen} options={{ headerShown: false}} />
-      <Tab.Screen name="Championship" component={ChampionStackScreen} options={{ headerShown: false}}  />
-      <Tab.Screen name="Task" component={TaskStackScreen} options={{ headerShown: false}} />
+        headerShown: false,
+      })}>
+      <Tab.Screen
+        name="News"
+        component={RootStackScreen}
+        options={{headerShown: false}}
+      />
+      <Tab.Screen
+        name="Championship"
+        component={ChampionStackScreen}
+        options={{headerShown: false}}
+      />
+      <Tab.Screen
+        name="Task"
+        component={TaskStackScreen}
+        options={{headerShown: false}}
+      />
       {/*<Tab.Screen name="Task" component={MainStackNavigator} />*/}
       {/*<Tab.Screen name="Versus" component={VersusStackNavigator} />*/}
-      <Tab.Screen name="Impact" component={ImpactStackScreen}  options={{ headerShown: false}} />
+      <Tab.Screen
+        name="Impact"
+        component={ImpactStackScreen}
+        options={{headerShown: false}}
+      />
     </Tab.Navigator>
   );
 };
