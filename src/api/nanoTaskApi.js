@@ -1,10 +1,12 @@
 import Config from '../../serverConfig';
-import {post, get} from 'axios';
+//import {post, get} from 'axios';
+
 // import aes256 from 'aes256';
 // import AES from 'crypto-js/aes';
 // var AES = require('crypto-js/aes');
 // var aes256 = require('nodejs-aes256');
 import AsyncStorage from '@react-native-community/async-storage';
+import { get,post } from './loginApi';
 
 
 export function getNanoTaskList(uid) {

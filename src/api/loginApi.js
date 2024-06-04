@@ -1,97 +1,116 @@
 import Config from '../../serverConfig';
-import {post, get} from 'axios';
-// import aes256 from 'aes256';
-// import AES from 'crypto-js/aes';
-// var AES = require('crypto-js/aes');
-// var aes256 = require('nodejs-aes256');
+import {post as _post, get as _get} from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 
-export function login(token) {
+// Helper function to get token and set headers
+async function loadUserData() {
+  return new Promise(async (res, rej) => {
+    var UserData = await AsyncStorage.getItem('userData');
+    if (UserData) res(JSON.parse(UserData));
+    else res(null);
+  });
+}
+
+export async function get()
+{
+  const headers= await attachHeaders();
+  console.log(headers);
+  return _get(...arguments, headers);
+}
+export async function post()
+{
+  const headers= await attachHeaders();
+  return _post(...arguments, headers);
+}
+async function attachHeaders() {
+  const userData = await loadUserData();
+  console.log(userData,"log")
+  if (userData) {
+    const token = userData.jwtToken;
+
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    return {headers};
+  } else {
+    return {};
+  }
+}
+
+export async function login(token) {
   const url = 'http://qanp-api.nanodot.us/nanotask/user/login';
-  // const url = Config.SERVICE_URL + '/users/list';
   return post(url, token);
 }
 
-
-export function signUp(token) {
-  console.log('token:', token);
+export async function signUp(token) {
   const url = 'http://qanp-api.nanodot.us/nanotask/user/signup';
-  // const url = Config.SERVICE_URL + '/users/list';
   return post(url, token);
 }
 
-export function addUdid(id) {
-  let obj = {
-    uuid: id,
-  };
-  console.log('API---');
-  const url = 'http://qanp-api.nanodot.us/nanotask/user/add?uuid=' + id;
-  console.log('========', url);
+export async function addUdid(id) {
+  const url = `http://qanp-api.nanodot.us/nanotask/user/add?uuid=${id}`;
   return get(url);
 }
 
-export function getServers() {
-  var key = Config.AES_KEY;
-  get(Config.SERVICE_URL)
+export async function getServers() {
+  const url = Config.SERVICE_URL;
+
+  get(url)
     .then(async (res) => {
-      if (res.status == 200) {
-        console.log('200', res);
-        let nanotask = res.nanotask;
-        let nanocontent = res.nanocontent;
-        let nanonf = res.nanonf;
-        let nanosrv = res.nanosrv;
-        let nanosocket = res.nanosocket;
-        let Store = res.store;
-        let Scouts = res.scouts;
-        let AndroidVersion = res.androidVersion;
-        let iosVersion = res.iosVersion;
-        let globalNews = res.news;
+      if (res.status === 200) {
+        let {
+          nanotask,
+          nanocontent,
+          nanonf,
+          nanosrv,
+          nanosocket,
+          store,
+          scouts,
+          androidVersion,
+          iosVersion,
+          news,
+        } = res.data;
+
+        // Decrypt and store in AsyncStorage (commented out decryption for now)
         // let natask = aes256.decrypt(key, nanotask);
         // let nacontent = aes256.decrypt(key, nanocontent);
         // let nanf = aes256.decrypt(key, nanonf);
         // let nasrv = aes256.decrypt(key, nanosrv);
         // let nanosckt = aes256.decrypt(key, nanosocket);
-        // let storeUrl = aes256.decrypt(key, Store);
-        // let globlaNewsUrl = aes256.decrypt(key, globalNews);
-        // let ScoutsUrl = aes256.decrypt(key, Scouts);
+        // let storeUrl = aes256.decrypt(key, store);
+        // let globalNewsUrl = aes256.decrypt(key, news);
+        // let scoutsUrl = aes256.decrypt(key, scouts);
+
         // await AsyncStorage.setItem('taskServer', natask);
         // await AsyncStorage.setItem('contentServer', nacontent);
         // await AsyncStorage.setItem('feedServer', nanf);
         // await AsyncStorage.setItem('serviceServer', nasrv);
         // await AsyncStorage.setItem('socketServer', nanosckt);
-        // await AsyncStorage.setItem('StoreUrl', storeUrl);
-        // await AsyncStorage.setItem('ScoutsUrl', ScoutsUrl);
-        // await AsyncStorage.setItem('gNewsUrl', globlaNewsUrl);
+        // await AsyncStorage.setItem('storeUrl', storeUrl);
+        // await AsyncStorage.setItem('scoutsUrl', scoutsUrl);
+        // await AsyncStorage.setItem('gNewsUrl', globalNewsUrl);
       }
-      //dispatch action
-      // resolve(Object.assign({}, response.data.data));
     })
-    .catch(function (error) {
-      // throw error
+    .catch((error) => {
       throw error;
     });
-
-
 }
-export function getNanoTaskList(uid) {
-  let obj = {
-      id : uid,
-    };
-    console.log(obj,uid,'idd');
-  const url = 'http://qanp-api.nanodot.us/nanotask/combined/v2/getall?id=' + uid;
-  // const url = Config.SERVICE_URL + '/users/list';
+
+export async function getNanoTaskList(uid) {
+  const url = `http://qanp-api.nanodot.us/nanotask/combined/v2/getall?id=${uid}`;
   return get(url);
 }
-export function getNanoTask(tid) {
 
-  const url = 'http://qanp-api.nanodot.us/nanotask/task/get/' + tid;
-  // const url = Config.SERVICE_URL + '/users/list';
+export async function getNanoTask(tid) {
+  const url = `http://qanp-api.nanodot.us/nanotask/task/get/${tid}`;
   return get(url);
 }
-export function getNanoTaskImages(tName) {
- //pg=0&sz=30
- console.log(tName,"TNAM")
-  const url = 'https://qanp-api.nanodot.us/nanotask/v2/task/' + tName + '/getall';//pg=0&sz=30;
-  // const url = Config.SERVICE_URL + '/users/list';
+
+export async function getNanoTaskImages(tName) {
+  const url = `https://qanp-api.nanodot.us/nanotask/v2/task/${tName}/getall`;
   return get(url);
 }

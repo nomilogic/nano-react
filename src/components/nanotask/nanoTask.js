@@ -115,7 +115,7 @@ class NanoTaskScreen extends Component {
           Alert.alert("Wrong Input!", "Username InCorrect.", [
             { text: "Okay" },
           ]);
-        }
+      }
       });
   };
 
@@ -400,12 +400,12 @@ const styles = StyleSheet.create({
     height: 100,
     backgroundColor: Colors.white,
     alignContent: "center",
-    color: Colors.white,
+    color: Colors.orange,
     marginTop: -50,
     borderRadius: 15,
     marginHorizontal: "10%",
     shadowColor: "#000",
-
+    zIndex:2,
     shadowOffset: {
       width: 15,
       height: 15,
